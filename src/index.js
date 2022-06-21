@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import '../style.css'
 import UI from './config/config.ui'
 import validate from './helpers/validate'
+import { login } from './services/auth.service'
 
 const { form, inputEmail, inputPassword } = UI
 const inputs = [inputEmail, inputPassword]
@@ -13,7 +14,7 @@ form.addEventListener('submit', (e) => {
 })
 
 // handlers
-function onSubmit() {
+async function onSubmit() {
   const isValidForm = inputs.every((input) => {
     const isValidInput = validate(input)
 
@@ -21,9 +22,10 @@ function onSubmit() {
   })
 
   if (!isValidForm) return
-
-  const formData = {
-    email: inputEmail.value.trim(),
-    password: inputPassword.value.trim(),
-  }
+  try {
+    await login(inputEmail.value, inputPassword.value)
+  } catch (err) {}
 }
+
+// denis.m.pcspace@gmail.com
+// dmgame12345
