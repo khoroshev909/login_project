@@ -4,6 +4,7 @@ import UI from './config/config.ui'
 import validate from './helpers/validate'
 import { login } from './services/auth.service'
 import { notify } from './views/notifications'
+import { getNews } from './services/news.service'
 
 const { form, inputEmail, inputPassword } = UI
 const inputs = [inputEmail, inputPassword]
@@ -24,11 +25,18 @@ async function onSubmit() {
 
   if (!isValidForm) return
   try {
-    await login(inputEmail.value, inputPassword.value)
+    const response = await login(inputEmail.value, inputPassword.value)
+
+    if (response.error === true) {
+      notify({ msg: 'Login faild', className: 'alert-danger' })
+      return
+    }
+
     form.reset()
     notify({ msg: 'Login success', className: 'alert-success' })
+    await getNews()
   } catch (err) {
-    notify({ mas: 'Login faild', className: 'alert-danger' })
+    notify({ msg: 'Login faild', className: 'alert-danger' })
   }
 }
 
